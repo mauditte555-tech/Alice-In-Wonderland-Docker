@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  wonderland:
+    build: .
+    container_name: wonderland
+    ports:
+      - "8080:80"           # Mappe le port 80 du conteneur sur 8080 de ton PC
+    volumes:
+      - ./:/usr/share/nginx/html  # Pour que les fichiers soient à jour immédiatement (mode dev)
+    restart: unless-stopped
