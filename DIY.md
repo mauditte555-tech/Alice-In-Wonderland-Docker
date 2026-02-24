@@ -104,12 +104,21 @@ Si la liste des conteneurs apparaît (même vide), tout fonctionne.
 
 # Création du site web
 
-Créer les fichiers du site :
+Importe les fichiers du site :
 
 * index.html
-* style.css
-* script.js
-* dossier audio (si musique)
+* caterpillar.html
+* queen.html
+* hatter.html
+* cheshire.html
+* caterpillar.png
+* reine.png
+* chapelier.png
+* cheshire.png
+* alice.png
+* music-player.js
+* Alice's Theme (From Alice in Wonderland_Soundtrack Version) - Danny Elfman.mp3
+* alice_in_wonderland/Alice_in_Wonderland_3.ttf
 
 Structure recommandée :
 
@@ -117,10 +126,18 @@ Structure recommandée :
 Alice-In-Wonderland-Docker
 │
 ├── index.html
-├── style.css
-├── script.js
-├── audio/
-│   └── musique.mp3
+├── caterpillar.html
+├── queen.html
+├── hatter.html
+├── cheshire.html
+├── caterpillar.png
+├── reine.png
+├── chapelier.png
+├── cheshire.png
+├── alice.png
+├── music-player.js
+├── Alice's Theme (From Alice in Wonderland_Soundtrack Version) - Danny Elfman.mp3
+├── alice_in_wonderland/Alice_in_Wonderland_3.ttf
 ```
 
 ---
@@ -150,13 +167,13 @@ Ce fichier indique à Docker d’utiliser Nginx pour servir le site web.
 Construire l’image :
 
 ```bash
-docker build -t nom-du-site .
+docker build -t wonderland .
 ```
 
 Lancer le conteneur :
 
 ```bash
-docker run -p 8080:80 nom-du-site
+docker run -p 8080:80 wonderland
 ```
 
 Ouvrir dans le navigateur :
@@ -268,10 +285,18 @@ Alice-In-Wonderland-Docker
 ├── docker-compose.yml
 ├── Dockerfile
 ├── index.html
-├── style.css
-├── script.js
-└── audio/
-    └── musique.mp3
+├── caterpillar.html
+├── queen.html
+├── hatter.html
+├── cheshire.html
+├── caterpillar.png
+├── reine.png
+├── chapelier.png
+├── cheshire.png
+├── alice.png
+├── music-player.js
+├── Alice's Theme (From Alice in Wonderland_Soundtrack Version) - Danny Elfman.mp3
+├── alice_in_wonderland/Alice_in_Wonderland_3.ttf
 ```
 
 ---
