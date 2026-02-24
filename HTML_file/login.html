@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion Wonderland</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#111;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.container{
+  background:#1e1e1e;
+  padding:40px;
+  border-radius:12px;
+  width:320px;
+  text-align:center;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:none;
+  border-radius:6px;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:15px;
+}
+
+.login{ background:#6a00ff; color:white; }
+.register{ background:#00b894; color:white; }
+.google{ background:white; color:black; }
+
+.message{
+  margin-top:10px;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Wonderland</h2>
+
+  <input id="pseudo" placeholder="Pseudo">
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Mot de passe">
+
+  <button class="login" onclick="login()">Connexion</button>
+  <button class="register" onclick="register()">Inscription</button>
+
+  <hr>
+
+  <button class="google" onclick="loginGoogle()">Connexion Google</button>
+
+  <div class="message" id="msg"></div>
+</div>
+
+<script>
+/* ============================= */
+/* CONFIG SUPABASE */
+/* ============================= */
+
+const SUPABASE_URL = "https://omxjdkfqkqgkzgbrlqpl.supabase.co"
+const SUPABASE_KEY = "sb_publishable_Ou1-DgRJBcNB1CZaK8tMPQ_Z95rkHPO"
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+const msg = document.getElementById("msg")
+
+function show(m){
+  msg.innerText = m
+}
+
+/* ============================= */
+/* INSCRIPTION */
+/* ============================= */
+
+async function register(){
+
+  const pseudo = document.getElementById("pseudo").value
+  const email = document.getElementById("email").value
+  const password = document.getElementById("password").value
+
+  if(!pseudo || !email || !password){
+    show("Remplis tous les champs")
+    return
+  }
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options:{
+      data:{
+        pseudo: pseudo
+      }
+    }
+  })
+
+  if(error) show(error.message)
+  else show("Inscription réussie. Vérifie ton email.")
+}
+
+
+supabase.auth.getSession().then(({data})=>{
+  if(!data.session){
+    window.location.href="login.html"
+  }
+})
+
+
+/* ============================= */
+/* CONNEXION */
+/* ============================= */
+
+async function login(){
+
+  const email = document.getElementById("email").value
+  const password = document.getElementById("password").value
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+
+  if(error){
+    show(error.message)
+  }else{
+    show("Connexion réussie")
+    window.location.href = "index.html"
+  }
+}
+
+/* ============================= */
+/* GOOGLE SSO */
+/* ============================= */
+
+async function loginGoogle(){
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google"
+  })
+
+  if(error) show(error.message)
+}
+
+/* ============================= */
+/* SESSION AUTO */
+/* ============================= */
+
+supabase.auth.getSession().then(({data})=>{
+  if(data.session){
+    window.location.href="index.html"
+  }
+})
+</script>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+async function logout(){
+  await supabase.auth.signOut()
+  window.location.href="login.html"
+}
+</script>
+
+</body>
+</html>
