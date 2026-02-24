@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jeu des Énigmes</title>
+
+<style>
+@font-face {
+  font-family: 'Alice';
+  src: url('alice_in_wonderland/Alice_in_Wonderland_3.ttf') format('truetype');
+}
+
+body{
+  margin:0;
+  font-family:'Alice', cursive;
+  background-image: url("https://www.avezano.com/cdn/shop/files/QQ5572_210x150_-AI_-Annie.jpg?v=1713427637&width=823");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+}
+
+.game{
+  background:rgba(30, 30, 30, 0.95);
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 0 40px rgba(0, 255, 213, 0.6), 0 0 20px rgba(122, 0, 255, 0.4);
+  text-align:center;
+  width:90%;
+  max-width:500px;
+  border:2px solid rgba(0, 255, 213, 0.4);
+}
+
+h2{
+  font-family:'Alice', cursive;
+  font-size:2.8rem;
+  color:#00ffd5;
+  text-shadow:0 0 10px rgba(0, 255, 213, 0.6);
+  margin:0 0 20px 0;
+}
+
+p{
+  font-family:'Alice', cursive;
+  font-size:1.4rem;
+  line-height:1.6;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  border:2px solid rgba(0, 255, 213, 0.5);
+  border-radius:6px;
+  font-size:1.1rem;
+  font-family:'Alice', cursive;
+  background:rgba(255,255,255,0.1);
+  color:white;
+  box-sizing:border-box;
+}
+
+input::placeholder{
+  color:rgba(255,255,255,0.6);
+}
+
+input:focus{
+  outline:none;
+  border-color:#00ffd5;
+  box-shadow:0 0 10px rgba(0, 255, 213, 0.5);
+}
+
+button{
+  margin-top:15px;
+  padding:12px 30px;
+  font-size:1.2rem;
+  font-family:'Alice', cursive;
+  border:2px solid #00ffd5;
+  border-radius:6px;
+  cursor:pointer;
+  background:rgba(0, 255, 213, 0.2);
+  color:#00ffd5;
+  transition:all 0.3s ease;
+}
+
+button:hover{
+  background:#00ffd5;
+  color:#1e1e1e;
+  box-shadow:0 0 15px rgba(0, 255, 213, 0.8);
+}
+
+#feedback{
+  margin-top:20px;
+  font-size:1.1rem;
+  font-weight:bold;
+  min-height:30px;
+}
+
+/* Bouton retour */
+.return-button{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:100;
+}
+
+.return-button button{
+  padding:10px;
+  background:transparent;
+  border:none;
+  box-shadow:0 0 15px rgba(255,255,255,0.6);
+  border-radius:15px;
+  cursor:pointer;
+  transition:all 0.3s ease;
+}
+
+.return-button button:hover{
+  transform:scale(1.15);
+  box-shadow:0 0 25px rgba(122,0,255,0.8);
+  background:rgba(122,0,255,0.2);
+}
+
+.return-button img{
+  width:50px;
+  height:50px;
+  object-fit:contain;
+  display:block;
+}
+
+/* CONTENEUR PLEIN ECRAN */
+.smoke-container{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  pointer-events:none;
+}
+
+/* BULLES */
+.smoke{
+  position:absolute;
+  width:60px;
+  height:60px;
+  background:rgba(220,220,220,0.2);
+  border-radius:40%;
+  filter:blur(15px);
+  animation: smokeRise linear infinite;
+}
+
+/* ANIMATION */
+@keyframes smokeRise{
+  0%{
+    transform:translateY(0) scale(0.5);
+    opacity:0.7;
+  }
+  100%{
+    transform:translateY(-400px) scale(2);
+    opacity:0;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- musique Alice Theme -->
+<audio id="music" autoplay loop style="display:none;">
+  <source src="Alice's Theme (From Alice in Wonderland_Soundtrack Version) - Danny Elfman.mp3" type="audio/mpeg">
+</audio>
+
+<div class="game">
+  <h2 id="title">🐛 Énigme 1 / 10</h2>
+  <p id="question"></p>
+
+  <input id="answer" placeholder="Ta réponse...">
+  <button onclick="submitAnswer()">Valider</button>
+
+  <p id="feedback"></p>
+</div>
+
+<!-- Bouton retour -->
+<div class="return-button">
+  <button onclick="window.location.href='index.html'" class="btn-image">
+    <img src="alice.png" alt="Retour">
+  </button>
+</div>
+
+<div class="smoke-container" id="smoke"></div>
+
+<script>
+const container = document.getElementById("smoke");
+
+/* crée beaucoup de fumée partout */
+for(let i=0;i<40;i++){
+
+  const s = document.createElement("div");
+  s.className = "smoke";
+
+  s.style.left = Math.random()*100 + "vw";
+  s.style.bottom = Math.random()*100 + "vh";
+
+  s.style.animationDuration =
+    4 + Math.random()*10 + "s";
+
+  s.style.animationDelay =
+    Math.random()*3 + "s";
+
+  container.appendChild(s);
+}
+</script>
+
+<script>
+
+/* =========================
+   BANQUE D'ÉNIGMES
+========================= */
+const riddles = [
+{q:"Je parle sans bouche et j'entends sans oreilles. Qui suis-je ?", a:"echo"},
+{q:"Plus tu m'enlèves, plus je grandis.", a:"trou"},
+{q:"Je suis toujours devant toi mais invisible.", a:"avenir"},
+{q:"Je monte mais ne descends jamais.", a:"age"},
+{q:"Je peux remplir une pièce sans prendre de place.", a:"lumiere"},
+{q:"Qu'est-ce qui a des dents mais ne mord pas ?", a:"peigne"},
+{q:"Qu'est-ce qui casse sans qu'on le touche ?", a:"silence"},
+{q:"Je voyage autour du monde mais reste dans un coin.", a:"timbre"},
+{q:"Qu'est-ce qui a un oeil mais ne voit pas ?", a:"aiguille"},
+{q:"Plus j'ai chaud, plus je suis frais.", a:"pain"},
+{q:"Je tombe mais ne me casse jamais.", a:"nuit"},
+{q:"Je peux voler sans ailes et pleurer sans yeux.", a:"nuage"},
+{q:"Je commence la nuit et termine le matin.", a:"n"},
+{q:"On me prend avant de me donner.", a:"photo"},
+{q:"Je suis plein de trous mais je retiens l'eau.", a:"eponge"},
+{q:"Je grandis quand je mange mais meurs quand je bois.", a:"feu"},
+{q:"Je suis léger comme une plume mais impossible à tenir longtemps.", a:"souffle"},
+{q:"Je disparais quand on prononce mon nom.", a:"silence"},
+{q:"Je marche sans pieds et vole sans ailes.", a:"temps"},
+{q:"Je peux être cassé mais jamais tenu.", a:"promesse"},
+{q:"Je suis plus utile quand je suis cassé. Qui suis-je ?", a:"oeuf"},
+{q:"Plus je travaille, plus je deviens petit. Qui suis-je ?", a:"crayon"},
+{q:"Je tourne sans bouger et je peux être chaud ou froid. Qui suis-je ?", a:"robinet"},
+{q:"Je n'ai pas de vie mais je peux mourir. Qui suis-je ?", a:"batterie"},
+{q:"Je peux courir mais je ne marche jamais. Qui suis-je ?", a:"riviere"},
+{q:"J'ai des clés mais pas de serrures. Qui suis-je ?", a:"clavier"},
+{q:"Je peux être ouvert mais je ne suis pas une porte. Qui suis-je ?", a:"livre"},
+{q:"Je peux monter très haut sans jamais quitter le sol. Qui suis-je ?", a:"arbre"},
+{q:"Je te suis partout le jour mais je disparais la nuit. Qui suis-je ?", a:"ombre"},
+{q:"Je peux être long ou court, et on me raconte. Qui suis-je ?", a:"histoire"},
+{q:"Je suis fait pour être brisé. Qui suis-je ?", a:"record"},
+{q:"Je peux être dur, mou ou liquide, mais je suis toujours de l'eau. Qui suis-je ?", a:"glacon"},
+{q:"Je suis devant et derrière à la fois. Qui suis-je ?", a:"miroir"},
+{q:"Je peux parler toutes les langues sans jamais dire un mot. Qui suis-je ?", a:"livre"},
+{q:"Je peux avoir des branches mais pas de feuilles. Qui suis-je ?", a:"banque"},
+{q:"Je peux être noir, blanc ou vert, et je réveille le matin. Qui suis-je ?", a:"the"},
+{q:"Je suis à la fin du chemin et au début de rien. Qui suis-je ?", a:"lettre n"},
+{q:"Je peux être sucré ou salé et je viens après le repas. Qui suis-je ?", a:"dessert"},
+{q:"Je peux tomber du ciel sans être pluie. Qui suis-je ?", a:"neige"},
+{q:"Je peux être plié mais je ne suis pas du papier. Qui suis-je ?", a:"linge"}
+];
+
+/* =========================
+   VARIABLES JEU
+========================= */
+let gameRiddles = [];
+let index = 0;
+let score = 0;
+
+/* =========================
+   MELANGE ALEATOIRE
+========================= */
+function shuffle(array){
+  return array.sort(()=>Math.random()-0.5);
+}
+
+/* =========================
+   DEMARRER JEU
+========================= */
+function startGame(){
+  gameRiddles = shuffle([...riddles]).slice(0,10);
+  index = 0;
+  score = 0;
+  showRiddle();
+}
+
+/* =========================
+   AFFICHER ENIGME
+========================= */
+function showRiddle(){
+  if(index >= 10){
+    showScore();
+    return;
+  }
+
+  document.getElementById("title").textContent =
+    `🐛 Énigme ${index+1} / 10`;
+
+  document.getElementById("question").textContent =
+    gameRiddles[index].q;
+
+  document.getElementById("answer").value = "";
+  document.getElementById("feedback").textContent = "";
+}
+
+/* =========================
+   VALIDER REPONSE
+========================= */
+function normalize(text){
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .trim();
+}
+
+function submitAnswer(){
+
+  const user = normalize(
+    document.getElementById("answer").value
+  );
+
+  const correct = normalize(gameRiddles[index].a);
+
+  if(user === correct){
+    score++;
+    document.getElementById("feedback").textContent =
+      "✅ Correct !";
+  }else{
+    document.getElementById("feedback").textContent =
+      "❌ Mauvaise réponse : " + gameRiddles[index].a;
+  }
+
+  index++;
+
+  setTimeout(showRiddle,1200);
+}
+
+/* =========================
+   SCORE FINAL
+========================= */
+function showScore(){
+  document.querySelector(".game").innerHTML = `
+    <h2>🎉 Partie terminée !</h2>
+    <p style="font-size:1.5rem; margin:20px 0;">Score : ${score} / 10</p>
+    <button onclick="location.reload()">Rejouer</button>
+  `;
+}
+
+/* start */
+startGame();
+
+</script>
+</body>
+</html>

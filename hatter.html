@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lièvre de Mars</title>
+
+<style>
+@font-face {
+  font-family: 'Alice';
+  src: url('alice_in_wonderland/Alice_in_Wonderland_3.ttf') format('truetype');
+}
+
+body{
+  margin:0;
+  overflow:hidden;
+  font-family: 'Alice', cursive;
+  background-image: url("https://www.avezano.com/cdn/shop/files/QQ5572_210x150_-AI_-Annie.jpg?v=1713427637&width=823");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width:100%;
+  height:100vh;
+}
+
+h1{
+  position:absolute;
+  width:100%;
+  text-align:center;
+  font-size: clamp(2.6rem,5.2vw,5.2rem);
+  text-shadow: 
+    0 0 20px goldenrod,
+    1px 1px 2px rgba(0,0,0,0.8),
+    2px 2px 4px rgba(0,0,0,0.7),
+    3px 3px 6px rgba(0,0,0,0.6),
+    4px 4px 8px rgba(0,0,0,0.5),
+    5px 5px 10px rgba(0,0,0,0.4),
+    0 0 40px rgba(255,215,0,0.6);
+  font-family: 'Alice', cursive, fantasy;
+  color: whitesmoke;
+}
+
+#gameArea{
+  position:relative;
+  width:100vw;
+  height:85vh;
+  overflow:hidden;
+  
+}
+
+/* souris */
+#mouse{
+  position:absolute;
+  width:70px;
+  transition: left 0.3s linear, top 0.3s linear;
+  box-shadow: 0 0 80px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.6), inset 0 0 30px rgba(255,255,255,0.4);
+  border-radius: 50%;
+}
+
+/* Bouton retour */
+.return-button{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:100;
+}
+
+.return-button button{
+  padding:10px;
+  background:transparent;
+  box-shadow:0 0 15px rgba(255,255,255,0.6);
+  border-radius:15px;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  border:none;
+}
+
+.return-button button:hover{
+  transform:scale(1.15);
+  box-shadow:0 0 25px rgba(122,0,255,0.8);
+  background:rgba(122,0,255,0.2);
+}
+
+.return-button img{
+  width:50px;
+  height:50px;
+  object-fit:contain;
+  display:block;
+}
+</style>
+</head>
+
+<body>
+
+<!-- musique Alice Theme -->
+<audio id="music" autoplay loop style="display:none;">
+  <source src="Alice's Theme (From Alice in Wonderland_Soundtrack Version) - Danny Elfman.mp3" type="audio/mpeg">
+</audio>
+
+<h1>Attrape le Lièvre de Mars !</h1>
+
+<div id="gameArea">
+  <img id="mouse" src="Mars.png" alt="Souris">
+</div>
+
+<!-- Bouton retour -->
+<div class="return-button">
+  <button onclick="window.location.href='index.html'" class="btn-image">
+    <img src="alice.png" alt="Retour">
+  </button>
+</div>
+
+<script>
+const mouse = document.getElementById("mouse");
+const area = document.getElementById("gameArea");
+
+let mouseX = 300;
+let mouseY = 200;
+
+mouse.style.left = mouseX + "px";
+mouse.style.top = mouseY + "px";
+
+/* =========================
+   LA SOURIS FUIT LE CURSEUR
+========================= */
+area.addEventListener("mousemove", (e)=>{
+
+  const rect = mouse.getBoundingClientRect();
+
+  const dx = e.clientX - (rect.left + rect.width/2);
+  const dy = e.clientY - (rect.top + rect.height/2);
+  const distance = Math.sqrt(dx*dx + dy*dy);
+
+  /* si le curseur approche -> la souris fuit */
+  if(distance < 300){
+    moveMouse();
+  }
+
+  /* collision = victoire */
+  if(distance < 20){
+    alert("Bravo ! Tu as attrapé le lièvre de Mars !");
+    location.reload();
+  }
+});
+
+function moveMouse(){
+
+  mouseX = Math.random() * (area.clientWidth - 80);
+  mouseY = Math.random() * (area.clientHeight - 80);
+
+  mouse.style.left = mouseX + "px";
+  mouse.style.top = mouseY + "px";
+}
+</script>
+</body>
+</html>

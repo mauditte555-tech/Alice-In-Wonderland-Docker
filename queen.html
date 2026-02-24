@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Reine</title>
+<link rel="stylesheet" href="index.css">
+
+<style>
+
+@font-face {
+  font-family: 'Alice';
+  src: url('alice_in_wonderland/Alice_in_Wonderland_3.ttf') format('truetype');
+}
+
+body{
+  margin:0;
+  overflow:hidden;
+  font-family: 'Alice', cursive;
+  background-image: url("https://www.avezano.com/cdn/shop/files/QQ5572_210x150_-AI_-Annie.jpg?v=1713427637&width=823");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width:100%;
+  height:100vh;
+}
+
+/* Titre */
+h1{
+  position:absolute;
+  width:100%;
+  text-align:center;
+  font-size: clamp(2.6rem,5.2vw,5.2rem);
+  text-shadow: 
+    0 0 20px goldenrod,
+    1px 1px 2px rgba(0,0,0,0.8),
+    2px 2px 4px rgba(0,0,0,0.7),
+    3px 3px 6px rgba(0,0,0,0.6),
+    4px 4px 8px rgba(0,0,0,0.5),
+    5px 5px 10px rgba(0,0,0,0.4),
+    0 0 40px rgba(255,215,0,0.6);
+  font-family: 'Alice', cursive, fantasy;
+  color: whitesmoke;
+}
+#game {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  margin: 20px auto;
+  border: 5px solid red;
+  background-color: rgba(255,255,255,0.1);
+}
+.card {
+  width: 60px;
+  height: 80px;
+  background-color: red;
+  position: absolute;
+  border-radius: 10%;
+  cursor: pointer;
+  border: 2px solid gold;
+}
+#score {
+  color: gold;
+  text-align: center;
+  font-size: 24px;
+}
+
+/* Bouton retour */
+.return-button{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:100;
+}
+
+.return-button button{
+  padding:10px;
+  background:transparent;
+  border:none;
+  box-shadow:0 0 15px rgba(255,255,255,0.6);
+  border-radius:15px;
+  cursor:pointer;
+  transition:all 0.3s ease;
+}
+
+.return-button button:hover{
+  transform:scale(1.15);
+  box-shadow:0 0 25px rgba(122,0,255,0.8);
+  background:rgba(122,0,255,0.2);
+}
+
+.return-button img{
+  width:50px;
+  height:50px;
+  object-fit:contain;
+  display:block;
+}
+</style>
+
+</head>
+<body>
+  <!-- musique Alice Theme -->
+  <audio id="music" autoplay loop style="display:none;">
+    <source src="Alice's Theme (From Alice in Wonderland_Soundtrack Version) - Danny Elfman.mp3" type="audio/mpeg">
+  </audio>
+
+
+<!-- Bouton retour -->
+<div class="return-button">
+  <button onclick="window.location.href='index.html'" class="btn-image">
+    <img src="alice.png" alt="Retour">
+  </button>
+</div>
+
+
+<h1 id="score">Score : 0</h1>
+<div id="game"></div>
+
+<script>
+const game = document.getElementById('game');
+const scoreDisplay = document.getElementById('score');
+let score = 0;
+let cards = [];
+let totalProcessed = 0; // cartes cliquées ou tombées
+const maxCards = 15;
+let gameOver = false;
+
+// Crée une carte
+function createCard() {
+  if(gameOver) return;
+  const card = document.createElement('div');
+  card.classList.add('card');
+  card.style.left = Math.random() * (game.clientWidth - 60) + 'px';
+  card.style.top = '0px';
+  game.appendChild(card);
+  cards.push(card);
+
+  // Clique sur la carte
+  card.addEventListener('click', () => {
+    if(gameOver) return;
+    score += 1;
+    scoreDisplay.textContent = "Score : " + score;
+    removeCard(card);
+  });
+}
+
+// Supprime une carte et incrémente le compteur
+function removeCard(card) {
+  if(cards.includes(card)) {
+    game.removeChild(card);
+    cards = cards.filter(c => c !== card);
+    totalProcessed++;
+    checkGameOver();
+  }
+}
+
+// Vérifie si le jeu est terminé
+function checkGameOver() {
+  if(totalProcessed >= maxCards) {
+    gameOver = true;
+    alert("La partie est terminée ! Score final : " + score + " 👑");
+  }
+}
+
+// Fait descendre les cartes
+function gameLoop() {
+  if(gameOver) return;
+  cards.forEach(card => {
+    let top = parseFloat(card.style.top);
+    top += 2 + score*0.1;
+    card.style.top = top + 'px';
+
+    if(top > game.clientHeight - 80) {
+      removeCard(card);
+    }
+  });
+  requestAnimationFrame(gameLoop);
+}
+
+// Crée des cartes toutes les 1 seconde
+const cardInterval = setInterval(() => {
+  if(totalProcessed < maxCards) createCard();
+}, 1000);
+
+gameLoop();
+</script>
+
+</body>
+</html>

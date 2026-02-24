@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome in Wonderland🃏</title>
+
+<style>
+
+/* ========================= */
+/* POLICES */
+/* ========================= */
+
+@font-face {
+  font-family: 'Alice';
+  src: url('alice_in_wonderland/Alice_in_Wonderland_3.ttf') format('truetype');
+}
+
+/* ========================= */
+/* RESET */
+/* ========================= */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  font-family: 'Alice', cursive;
+  color:white;
+}
+
+/* ========================= */
+/* FOND WONDERLAND */
+/* ========================= */
+
+body{
+  /* background image for Wonderland */
+  background-image: url("https://www.avezano.com/cdn/shop/files/QQ5572_210x150_-AI_-Annie.jpg?v=1713427637&width=823");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* ========================= */
+/* TITRE */
+/* ========================= */
+
+.title{
+  position:absolute;
+  bottom:20px;
+  width:100%;
+  text-align:center;
+  font-size: clamp(2.6rem,5.2vw,5.2rem);
+  text-shadow: 
+    0 0 20px goldenrod,
+    1px 1px 2px rgba(0,0,0,0.8),
+    2px 2px 4px rgba(0,0,0,0.7),
+    3px 3px 6px rgba(0,0,0,0.6),
+    4px 4px 8px rgba(0,0,0,0.5),
+    5px 5px 10px rgba(0,0,0,0.4),
+    0 0 40px rgba(255,215,0,0.6);
+  font-family: 'Alice', cursive, fantasy;
+}
+
+
+/* ========================= */
+/* BOUTONS */
+/* ========================= */
+
+.side{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+}
+
+.left{ left:5%; }
+.right{ right:5%; }
+
+button{
+  padding:20px 30px;
+  font-size:1.2rem;
+  border:none;
+  border-radius:50px;
+  cursor:pointer;
+  background:white;
+  color:#7a00ff;
+  box-shadow:0 0 20px rgba(255,255,255,0.8);
+  transition:.3s;
+}
+
+.btn-image{
+  padding:10px;
+  background:transparent;
+  box-shadow:0 0 15px rgba(255,255,255,0.6);
+  border-radius:15px;
+}
+
+.btn-image img{
+  width:77px;
+  height:77px;
+  object-fit:contain;
+  display:block;
+}
+
+button:hover{
+  transform:scale(1.1);
+  background:#7a00ff;
+  color:white;
+}
+
+.btn-image:hover{
+  background:rgba(122,0,255,0.2);
+}
+
+/* ========================= */
+/* RESPONSIVE MOBILE */
+/* ========================= */
+
+@media (max-width: 768px){
+  .side{
+    position:absolute;
+    transform:none;
+    left:50%;
+    transform:translateX(-50%);
+  }
+
+  .left{
+    top:20px;
+    left:50%;
+  }
+
+  .right{
+    bottom:20px;
+    left:50%;
+  }
+}
+
+/* ========================= */
+/* ÉLÉMENTS FLOTTANTS */
+/* ========================= */
+
+.floating{
+  position:absolute;
+  animation: float linear infinite;
+  opacity:.8;
+}
+
+@keyframes float{
+  from{
+    transform:translateY(110vh) rotate(0deg);
+  }
+  to{
+    transform:translateY(-20vh) rotate(360deg);
+  }
+}
+
+/* tailles aléatoires */
+.small{ font-size:20px; animation-duration:18s;}
+.medium{ font-size:35px; animation-duration:25s;}
+.big{ font-size:55px; animation-duration:32s;}
+
+</style>
+</head>
+
+<body>
+
+      <!-- musique Alice Theme -->
+  <audio id="music" autoplay loop style="display:none;">
+    <source src="Alice's Theme (From Alice in Wonderland_Soundtrack Version) - Danny Elfman.mp3" type="audio/mpeg">
+  </audio>
+
+  
+<div class="title">Bienvenue au Pays des Merveilles</div>
+
+<!-- boutons -->
+<div class="side left">
+  <button onclick="goHatter()" class="btn-image">
+    <img src="chapelier.png" alt="Le Chapelier Fou">
+  </button>
+</div>
+
+<div class="side right">
+  <button onclick="goCheshire()" class="btn-image">
+    <img src="cheshire.png" alt="Le Chat de Cheshire">
+  </button>
+</div>
+
+<!-- boutons chenille et reine -->
+<div class="side" style="top:5%;left:50%;transform:translateX(-50%);">
+  <button onclick="goCaterpillar()" class="btn-image">
+    <img src="caterpillar.png" alt="La Chenille">
+  </button>
+</div>
+
+<div class="side" style="bottom:10%;left:50%;transform:translateX(-50%);">
+  <button onclick="goQueen()" class="btn-image">
+    <img src="reine.png" alt="La Reine">
+  </button>
+</div>
+
+
+<script>
+document.body.addEventListener("click", () => {
+  // Attempt to enter fullscreen on first user gesture (may be blocked if not allowed)
+  if (!document.fullscreenElement) {
+    const el = document.documentElement;
+    const request = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (request) {
+      try { request.call(el); } catch (e) { /* ignore */ }
+    }
+  }
+}, { once:true });
+
+
+/* ========================= */
+/* NAVIGATION */
+/* ========================= */
+
+function goHatter(){
+  // navigate to the Chapelier Fou page
+  window.location.href = 'hatter.html';
+}
+
+function goCheshire(){
+  // navigate to the Cheshire Cat page
+  window.location.href = 'cheshire.html';
+}
+
+function goCaterpillar(){
+  // navigate to the Caterpillar page
+  window.location.href = 'caterpillar.html';
+}
+
+function goQueen(){
+  // navigate to the Queen page
+  window.location.href = 'queen.html';
+}
+
+
+/* ========================= */
+/* OBJETS FLOTTANTS */
+/* ========================= */
+
+const symbols = ["🎩","🐇","🫖","♠","♥","♦","🎲","🃏","♦️","♥️","♣️","♠️","♟️","🕰️","🐈‍⬛","♣","🍵","⏱"];
+
+function createFloating(){
+
+  const el = document.createElement("div");
+  el.className="floating";
+
+  const size = ["small","medium","big"];
+  el.classList.add(size[Math.floor(Math.random()*size.length)]);
+
+  el.style.left=Math.random()*100+"vw";
+  el.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+
+  document.body.appendChild(el);
+
+  setTimeout(()=>el.remove(),35000);
+}
+
+setInterval(createFloating,900);
+
+</script>
+</body>
